@@ -8,4 +8,3 @@ sentence-transformers==2.2.2        # Embeddings (e.g., all-MiniLM)
 openai-whisper                      # Whisper model for video/audio transcription
 tiktoken==0.7.0                     # Tokenizer for OpenAI models
 pydantic==2.11.7                    # Pydantic v2 for FastAPI compatibility
-starlette==0.32.0                   # Needed by FastAPI 0.115+
