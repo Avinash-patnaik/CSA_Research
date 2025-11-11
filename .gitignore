@@ -2,5 +2,5 @@
 venv/
 
 # folders
-backend/data/
+backend/data
 docs/
