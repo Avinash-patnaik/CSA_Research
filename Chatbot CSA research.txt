@@ -1,0 +1,83 @@
+CSA_Research/
+├── backend/
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py                  # FastAPI entry point
+│   │   ├── chatbot.py               # Main query routing logic
+│   │   ├── config.py                # Loads environment variables
+│   │   ├── utils/
+│   │   │   ├── __init__.py
+│   │   │   ├── sql_engine.py        # Handles MySQL read-only queries
+│   │   │   ├── rag_engine.py        # Embedding search engine (FAISS/Chroma)
+│   │   │   ├── llm_local.py         # Local LLM interface (Mistral/LLama)
+│   │   │   └── llm_openai_blaise.py # GPT handler for Blaise-only queries
+│   │   └── data_ingest/
+│   │       ├── video_transcriber.py # Transcribes Blaise videos
+│   │       └── embed_docs.py        # Embeds PDFs and transcripts
+│   ├── models/                      # Local LLM models (GGUF files)
+│   ├── data/
+│   │   ├── documents/               # PDF/DOCX/etc.
+│   │   └── transcripts/             # Transcribed video files
+│   ├── .env                         # Secure environment variables
+│   └── requirements.txt
+│
+├── frontend/
+│ 	├── CSA-chatbot/
+│   │   ├── dist/
+│   │   │	├── assets/
+│   │   │	│	├── avi-avatar-photo.png
+│   │   │	│	├── csa-logo-photo.png
+│   │   │	│	├── index-ST-N4C42.css
+│   │   │	│	└── index-vPfRoG70.js
+│   │   │	├── favicon.ico			
+│   │   │	├──	index.html	
+│   │   │	├──	placeholder.svg
+│   │   │	└── robots.txt
+│   │   ├── node_modules/   	# All the node modules installed
+│   │   ├── public/
+│   │   │	├── favicon.ico		
+│   │   │	├──	placeholder.svg
+│   │   │	└── robots.txt
+│   │	├── src/
+│   │   │	├── assets/  		# I have all the png files inside this 
+│   │   │	├── components/
+│   │   │	│	└── ui/			# It has all .tsx files inside this 
+│   │   │	├── hooks/			# It has all .tsx files inside this 
+│   │   │	├── lib/			# It has all .tsx files inside this 
+│   │   │	├── pages/			# It has all .tsx files inside this 
+│	│   │   ├── App.css
+│	│	│   ├── main.tsx
+│	│	│   ├── App.tsx
+│	│	│   ├── index.css
+│	│	│   └── vite-env.d.ts
+│   │	├── .gitignore
+│   │	├── bun.lockb
+│   │	├── components.json
+│   │	├── eslint.config.js
+│   │	├── index.html
+│   │	├── package.json
+│   │	├── package-lock.json
+│   │	├── postcss.config.js
+│   │	├── README.md
+│   │	├── tailwind.config.ts
+│   │	├── tsconfig.app.json
+│   │	├── tsconfig.json
+│   │	├── tsconfig.node.json
+│   │	└── vite.config.ts
+│ 	├── node_modules/ 
+│   │   ├── tailwindcss/
+│   │   ├── tailwindcss-animate/
+│   │   ├── .package-lock.json/
+│ 	├── package-lock.json/
+│ 	├── package.json/  
+│
+├── docker/
+│   ├── Dockerfile.backend          # FastAPI backend image
+│   ├── Dockerfile.frontend         # React + Vite frontend image
+│   └── docker-compose.yml          # Stack orchestration
+│
+├── notebooks/
+│   └── dev_experiments.ipynb       # SQL, embeddings, and testing
+│
+├── README.md
+└── .gitignore
