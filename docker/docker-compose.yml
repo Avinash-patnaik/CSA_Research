@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  # --- Backend Service (FastAPI + Llama 3) ---
+  backend:
+    build:
+      context: ../backend  # Points to your 'backend' folder
+      dockerfile: ../docker/Dockerfile.backend # Uses the backend Dockerfile
+    
+    env_file:
+      - ../backend/.env  # Passes your .env file (with MODEL_PATH) to the container
+    
+    volumes:
+      - ../backend/models:/app/models  # Mounts your local 'models' folder
+                                      # into '/app/models' inside the container
+    
+    ports:
+      - "8000:8000"  # Maps your computer's port 8000 to the container's port 8000
+    
+    # We are NOT including the 'deploy' section for GPU, as it's CPU-only
+
+  # --- Frontend Service (React + Vite) ---
+  frontend:
+    build:
+      context: ../frontend/CSA-chatbot # Points to your React app's folder
+      dockerfile: ../../docker/Dockerfile.frontend # Path to the Dockerfile
+    
+    ports:
+      - "5173:5173"
+    
+    depends_on:
+      - backend
