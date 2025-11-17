@@ -11,12 +11,12 @@ print(f"Loading model from {MODEL_PATH}; Please wait! this may take a few minute
 
 llm = Llama(
     model_path=MODEL_PATH,
-    n_ctx=4096,
+    n_ctx=2048,
     n_gpu_layers=0,
-    n_threads=8,
+    n_threads=4,
+    n_batch=256,
     verbose=False
 )
-
 print("✅ Model loaded successfully!")
 
 def get_local_llm_response(prompt: str) -> str:
