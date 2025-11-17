@@ -1,0 +1,48 @@
+# --- Stage 1: Build the React App ---
+# Use an official Node.js image (Alpine is lightweight)
+FROM node:18-alpine as build
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy your package.json and package-lock.json
+# This path is relative to the build context (frontend/CSA-chatbot)
+COPY package.json package-lock.json ./
+
+# Install all node_modules
+RUN npm install
+
+# Copy the rest of your React app's source code
+COPY . .
+
+# Build the app for production (this creates the /dist folder)
+RUN npm run build
+
+# --- Stage 2: Serve the App with Nginx ---
+# Use a lightweight Nginx image
+FROM nginx:1.25-alpine
+
+# Set the port Nginx will run on (matches your docker-compose.yml)
+EXPOSE 5173
+
+# Copy the built files from the 'build' stage
+# from /app/dist (in the build stage) to /usr/share/nginx/html (in the Nginx stage)
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Remove the default Nginx configuration file
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Create a new config file for our Single Page Application (SPA)
+# This is CRITICAL. It tells Nginx to redirect all routes (like /chat or /profile)
+# back to your index.html file, which lets React Router handle them.
+RUN echo "server { \
+    listen 5173; \
+    location / { \
+        root /usr/share/nginx/html; \
+        index index.html; \
+        try_files \$uri \$uri/ /index.html; \
+    } \
+}" > /etc/nginx/conf.d/app.conf
+
+# Start Nginx in the foreground
+CMD ["nginx", "-g", "daemon off;"]
