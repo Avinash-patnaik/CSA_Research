@@ -4,6 +4,13 @@ FROM python:3.11-slim
 # Set the working directory inside the container
 WORKDIR /app
 
+# Install OS-level build tools
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    cmake \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
 # --- Install Dependencies ---
 # Copy ONLY the requirements file first to leverage Docker caching
 COPY requirements.txt .
