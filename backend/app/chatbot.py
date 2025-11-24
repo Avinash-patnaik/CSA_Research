@@ -1,5 +1,6 @@
-# backend/app/chatbot.py
-def answer_query(query: str) -> str:
-    if "blaise" in query.lower():
-        return "This looks like a Blaise-related query. (Stub response)"
-    return f"You asked: {query}"
+from .utils.llm_local import get_local_llm_response
+
+def answer_wuery(user_query: str) -> str:
+    llm_response =get_local_llm_response(user_query)
+    
+    return llm_response
