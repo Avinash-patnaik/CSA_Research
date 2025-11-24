@@ -7,6 +7,11 @@ BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENV_PATH = os.path.join(BACKEND_DIR, ".env")
 load_dotenv(ENV_PATH)
 
+
+class settings:
+    APP_NAME: str = "CSA-Chatbot"
+    MODEL_PATH: str = os.getenv("MODEL_PATH")
+    
 # LLM settings 
 MODEL_PATH = os.getenv("MODEL_PATH")
 
