@@ -8,17 +8,16 @@ ENV_PATH = os.path.join(BACKEND_DIR, ".env")
 load_dotenv(ENV_PATH)
 
 
-class settings:
+class Settings:
     APP_NAME: str = "CSA-Chatbot"
     MODEL_PATH: str = os.getenv("MODEL_PATH")
     
-# LLM settings 
-MODEL_PATH = os.getenv("MODEL_PATH")
-
-# --- Debug: Print to confirm it's working ---
-if MODEL_PATH and os.path.exists(MODEL_PATH):
-    print(f"✅ Config loaded: Model path found at {MODEL_PATH}")
-elif MODEL_PATH:
-    print(f"⚠️ WARNING: Config loaded, but path {MODEL_PATH} does not exist.")
+settings = Settings()
+    
+# --- Debug/Verification ---
+if settings.MODEL_PATH and os.path.exists(settings.MODEL_PATH):
+    print(f"✅ Config loaded: Model path found at {settings.MODEL_PATH}")
+elif settings.MODEL_PATH:
+    print(f"⚠️ WARNING: Config loaded, but path {settings.MODEL_PATH} does not exist.")
 else:
-    print(f"❌ ERROR: MODEL_PATH not found in {ENV_PATH}. Please check your .env file.")
+    print(f"❌ ERROR: MODEL_PATH not found. Please check your .env file.")
