@@ -8,11 +8,11 @@ ENV_PATH = os.path.join(BACKEND_DIR, ".env")
 load_dotenv(ENV_PATH)
 
 
-class Settings:
+class settings:
     APP_NAME: str = "CSA-Chatbot"
     MODEL_PATH: str = os.getenv("MODEL_PATH")
     
-settings = Settings()
+settings = settings()
     
 # --- Debug/Verification ---
 if settings.MODEL_PATH and os.path.exists(settings.MODEL_PATH):
