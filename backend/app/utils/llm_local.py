@@ -1,8 +1,8 @@
 from llama_cpp import Llama
-from app import config
+from ..config import Settings
 import os 
 
-MODEL_PATH = config.MODEL_PATH
+MODEL_PATH = Settings.MODEL_PATH
 
 if not MODEL_PATH or not os.path.exists(MODEL_PATH):
     raise ValueError(f"Model path not found: {MODEL_PATH}")
