@@ -17,7 +17,7 @@ class LLMLocalEngine:
             model_path=self.model_path,
             n_ctx=2048,
             n_gpu_layers=0,
-            n_threads=4,
+            n_threads=8,
             n_batch=256,
             verbose=False
         )
