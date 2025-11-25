@@ -6,7 +6,6 @@ class LLMLocalEngine:
     
     def __init__(self):
         
-        # 1. 🔑 FIX: Access the model path from the 'settings' instance
         self.model_path = settings.MODEL_PATH
 
         if not self.model_path or not os.path.exists(self.model_path):
@@ -14,7 +13,6 @@ class LLMLocalEngine:
 
         print(f"Loading model from {self.model_path}; Please wait! this may take a few minutes...")
 
-        # 2. 🔑 FIX: Store the initialized object as an instance attribute (self.llm)
         self.llm = Llama( 
             model_path=self.model_path,
             n_ctx=2048,
@@ -25,7 +23,6 @@ class LLMLocalEngine:
         )
         print("✅ Model loaded successfully!")
 
-    # 3. 🔑 FIX: Move the response logic into a method (self)
     def generate_response(self, prompt: str) -> str:
         """
         Get a response from the local LLM model using the class instance.
@@ -40,7 +37,6 @@ class LLMLocalEngine:
         print(f"Querying local model with: {prompt}")
 
         try:
-            # 🔑 FIX: Access the model using self.llm
             output = self.llm(
                 full_prompt,
                 max_tokens=512,
@@ -58,11 +54,8 @@ class LLMLocalEngine:
             return "Spiacenti, si è verificato un errore durante l'elaborazione della tua richiesta."
 
 
-# --- Singleton Access ---
-# Create one instance of the engine when the module is imported
 local_llm_instance = LLMLocalEngine()
 
-# This is the function chatbot.py will call (for convenience)
 def get_local_llm_response(prompt: str) -> str:
     """Convenience function for chatbot.py to call the instance method."""
     return local_llm_instance.generate_response(prompt)
