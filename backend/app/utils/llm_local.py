@@ -2,22 +2,26 @@ from llama_cpp import Llama
 from ..config import Settings
 import os 
 
-MODEL_PATH = Settings.MODEL_PATH
+class LLMlocalengine:
+    
+    def __init__(self):
+        
+        self.model_path = Settings.MODEL_PATH
 
-if not MODEL_PATH or not os.path.exists(MODEL_PATH):
-    raise ValueError(f"Model path not found: {MODEL_PATH}")
+        if not self.model_path or not os.path.exists(self.model_path):
+            raise ValueError(f"Model path not found: {self.model_path}")
 
-print(f"Loading model from {MODEL_PATH}; Please wait! this may take a few minutes...")
+        print(f"Loading model from {self.model_path}; Please wait! this may take a few minutes...")
 
-llm = Llama(
-    model_path=MODEL_PATH,
-    n_ctx=2048,
-    n_gpu_layers=0,
-    n_threads=4,
-    n_batch=256,
-    verbose=False
-)
-print("✅ Model loaded successfully!")
+        llm = Llama(
+            model_path=self.model_path,
+            n_ctx=2048,
+            n_gpu_layers=0,
+            n_threads=4,
+            n_batch=256,
+            verbose=False
+        )
+        print("✅ Model loaded successfully!")
 
 def get_local_llm_response(prompt: str) -> str:
     """
