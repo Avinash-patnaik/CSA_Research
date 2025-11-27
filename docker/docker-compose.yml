@@ -9,7 +9,8 @@ services:
       - ../backend/.env  
     
     volumes:
-      - ../backend/models:/app/models  # Mounts your local 'models' folder
+    # Mounts your local 'models' folder
+      - ../backend/models:/app/models  
     
     
     ports:
