@@ -13,7 +13,7 @@ class settings:
     
 settings = settings()
     
-# --- Debug/Verification ---
+    
 if settings.MODEL_PATH and os.path.exists(settings.MODEL_PATH):
     print(f"✅ Config loaded: Model path found at {settings.MODEL_PATH}")
 elif settings.MODEL_PATH:
