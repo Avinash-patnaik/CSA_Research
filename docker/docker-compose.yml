@@ -1,28 +1,32 @@
 services:
-  # --- Backend Service (FastAPI + Llama 3) ---
+  # --- Backend Service (FastAPI + Hugging Face Cloud) ---
   backend:
     build:
       context: ../backend  
       dockerfile: ../docker/Dockerfile.backend 
-    
+    container_name: csa_chatbot_backend
+    # Load your untracked secret HF_TOKEN and HF_MODEL_ID
     env_file:
       - ../backend/.env  
-    
-    volumes:
-    # Mounts your local 'models' folder
-      - ../backend/models:/app/models  
-    
-    
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+      - HF_MODEL_ID=${HF_MODEL_ID}
+    # REMOVED: No more local model volumes needed!
     ports:
-      - "8000:8000"  
+      - "8000:8000"
+    restart: always
 
   # --- Frontend Service (React + Vite) ---
   frontend:
     build:
       context: ../frontend/CSA-chatbot
       dockerfile: ../../docker/Dockerfile.frontend
+      args:
+        # This tells Vite to use the Nginx proxy path for API calls
+        - VITE_API_BASE_URL=/api
+    container_name: csa_chatbot_frontend
     ports:
       - "5173:5173"
-    
     depends_on:
       - backend
+    restart: always
