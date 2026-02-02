@@ -1,64 +1,38 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 import os
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from huggingface_hub import InferenceClient
+from dotenv import load_dotenv
 
-from .config import settings
-from .chatbot import answer_query
+load_dotenv()
 
-# ----------APPLICATION COMPONENTS-----------
-app = FastAPI(
-    title=settings.APP_NAME if hasattr(settings, "APP_NAME") else "CSA-Chatbot",
-    description="A chatbot for the CSA project",
-    version="0.0.1",
-)
+app = FastAPI()
 
-# ----------CORS CONFIGURATION-----------
-origins = [
-    # Frontend Development Ports
-    "http://localhost:8080",
-    "http://127.0.0.1:8080",
-
-    # Other local/network IPs
-    "http://10.199.1.77:8080",
-    "http://172.23.0.1:8080",
-
-    # Vite defaults
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-
-    # Backend
-    "http://localhost:8000",
-
-    # Docker internal service name
-    "http://backend:8000",
-
-    # Production frontend (if set)
-    os.environ.get("FRONTEND_PROD_URL", ""),
-]
-
-origins = [origin for origin in origins if origin]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# ------------ENDPOINTS-------------
-@app.get("/")
-def root():
-    return {"message": f"{app.title} is running"}
-
-
+# Match the frontend body: JSON.stringify({ query: query })
 class ChatRequest(BaseModel):
     query: str
 
+client = InferenceClient(
+    model=os.getenv("HF_MODEL_ID"),
+    api_key=os.getenv("HF_TOKEN")
+)
 
-# 🔑 IMPORTANT: match frontend `/api/chat`
-@app.post("/api/chat")
-def chat(request: ChatRequest):
-    response = answer_query(request.query)
-    return {"response": response}
+@app.post("/chat")
+async def chat_endpoint(request: ChatRequest):
+    try:
+        # Mistral v0.3 Italian logic
+        response = client.chat.completions.create(
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": request.query}
+            ],
+            max_tokens=800,
+            temperature=0.4 # Lower temperature for more professional, stable Italian
+        )
+        
+        # Match the frontend interface: ChatResponse { response: string }
+        return {"response": response.choices[0].message.content}
+
+    except Exception as e:
+        print(f"Error: {e}")
+        raise HTTPException(status_code=500, detail="Errore del server AI")

@@ -1,38 +1,23 @@
-# --- Stage 1: Build the React App ---
+# --- Stage 1: Build ---
 FROM node:18-alpine as build
-
-
 WORKDIR /app
 
+# Define the build argument for the backend URL
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 
 COPY package.json package-lock.json ./
-
-# Install all node_modules
 RUN npm install
-
-
 COPY . .
-
 RUN npm run build
 
-# --- Stage 2: Serve the App with Nginx ---
+# --- Stage 2: Serve ---
 FROM nginx:1.25-alpine
+# Copy the built files
+COPY --from=build /app/dist /usr/share/nginx/html
+# Remove the old config and add our custom one (below)
+RUN rm /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 5173
-
-COPY --from=build /app/dist /usr/share/nginx/html
-
-RUN rm /etc/nginx/conf.d/default.conf
-
-# new config file for our Single Page Application (SPA)
-RUN echo "server { \
-    listen 5173; \
-    location / { \
-        root /usr/share/nginx/html; \
-        index index.html; \
-        try_files \$uri \$uri/ /index.html; \
-    } \
-}" > /etc/nginx/conf.d/app.conf
-
-# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
