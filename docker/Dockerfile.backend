@@ -1,29 +1,23 @@
-# --- Stage 1: Python Base Image ---
-FROM python:3.11-slim
+FROM python:3.11-slim-bookworm
 
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=
+    
 
 WORKDIR /app
 
-# Install OS-level build tools
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
-    cmake \
-    gcc \
-    g++ \
     && rm -rf /var/lib/apt/lists/*
-    
-# --- Install Dependencies ---
-COPY requirements.txt .
 
-# Install Python dependencies
-RUN pip install --upgrade pip && \
-    pip install -r requirements.txt --no-cache-dir
+COPY backend/requirements.txt .
 
-# --- Copy Application Code ---
-COPY . /app
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
+COPY backend/app ./app
 
 EXPOSE 8000
 
-# Running the application using Uvicorn
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
