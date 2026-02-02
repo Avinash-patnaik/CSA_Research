@@ -1,61 +1,50 @@
-from llama_cpp import Llama
 import os 
-from ..config import settings 
+from huggingface_hub import InferenceClient
+from dotenv import load_dotenv
 
-class LLMLocalEngine:
-    
+load_dotenv()
+
+class LLMHFEngine:
     def __init__(self):
+        self.hf_token = os.getenv("HF_TOKEN")
+        self.model_id = os.getenv("HF_MODEL_ID")
         
-        self.model_path = settings.MODEL_PATH
-
-        if not self.model_path or not os.path.exists(self.model_path):
-            raise ValueError(f"Model path not found: {self.model_path}")
-
-        print(f"Loading model from {self.model_path}; Please wait! this may take a few minutes...")
-
-        self.llm = Llama( 
-            model_path=self.model_path,
-            n_ctx=2048,
-            n_gpu_layers=0,
-            n_threads=8,
-            n_batch=256,
-            verbose=False
-        )
-        print("✅ Model loaded successfully!")
-
+        if not self.hf_token:
+            raise ValueError("HF_TOKEN is not set in environment variables.")
+        
+        self.client = InferenceClient(
+            model=self.model_id,
+            api_key=self.hf_token      
+            )
+        print(f"✅ Hugging Face Inference Client initialized for model: {self.model_id}")
+        
     def generate_response(self, prompt: str) -> str:
-        """
-        Get a response from the local LLM model using the class instance.
-        """
-        system_prompt = "Sei un assistente disponibile, rispettoso e onesto."
-        full_prompt = (
-            f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n"
-            f"{system_prompt}<|eot_id|><|start_header_id|>user<|end_header_id|>\n\n"
-            f"{prompt}<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n"
-        )
-
-        print(f"Querying local model with: {prompt}")
-
+        
+        system_prompt = "Sei un assistente disponibile, rispettoso e onesto. Rispondi sempre in italiano."
+        
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": prompt}
+        ]
+        
+        print(f"🤖 Sending prompt to Hugging Face model: {self.model_id}")
+        
         try:
-            output = self.llm(
-                full_prompt,
-                max_tokens=512,
-                echo=False,
-                stop=["<|eot_id|", "<|end_of_text|>"]
+            response = self.client.chat_completion(
+                messages=messages,
+                max_new_tokens=512,
+                temperature=0.7
             )
             
-            response_text = output["choices"][0]["text"].strip()
+            response_text = response.choices[0].message.content.strip()
             print(f"Model response: {response_text}")
-            
             return response_text
 
         except Exception as e:
-            print(f"Error during model generation: {e}")
-            return "Spiacenti, si è verificato un errore durante l'elaborazione della tua richiesta."
+            print(f"❌ Error during Hugging Face inference: {e}")
+            return "Si è verificato un errore durante la generazione della risposta."
+        
+llm_hf_engine = LLMHFEngine()
 
-
-local_llm_instance = LLMLocalEngine()
-
-def get_local_llm_response(prompt: str) -> str:
-    """Convenience function for chatbot.py to call the instance method."""
-    return local_llm_instance.generate_response(prompt)
+def get_hf_response(prompt: str) -> str:
+    return llm_hf_engine.generate_response(prompt)
