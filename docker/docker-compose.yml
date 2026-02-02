@@ -19,10 +19,9 @@ services:
   # --- Frontend Service (React + Vite) ---
   frontend:
     build:
-      context: ../frontend/CSA-chatbot
-      dockerfile: ../../docker/Dockerfile.frontend
+      context: ../frontend  # Changed from ../frontend/CSA-chatbot
+      dockerfile: ../docker/Dockerfile.frontend
       args:
-        # This tells Vite to use the Nginx proxy path for API calls
         - VITE_API_BASE_URL=/api
     container_name: csa_chatbot_frontend
     ports:
