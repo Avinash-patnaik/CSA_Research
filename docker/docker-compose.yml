@@ -2,7 +2,7 @@ services:
   # Backend Service (FastAPI + Hugging Face Cloud) 
   backend:
     build:
-      context: ../backend
+      context: ..
       dockerfile: docker/Dockerfile.backend 
     container_name: csa_chatbot_backend
     env_file:
