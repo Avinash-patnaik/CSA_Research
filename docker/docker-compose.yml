@@ -1,25 +1,23 @@
 services:
-  # --- Backend Service (FastAPI + Hugging Face Cloud) ---
+  # Backend Service (FastAPI + Hugging Face Cloud) 
   backend:
     build:
       context: ../backend  
       dockerfile: ../docker/Dockerfile.backend 
     container_name: csa_chatbot_backend
-    # Load your untracked secret HF_TOKEN and HF_MODEL_ID
     env_file:
       - ../backend/.env  
     environment:
       - HF_TOKEN=${HF_TOKEN}
       - HF_MODEL_ID=${HF_MODEL_ID}
-    # REMOVED: No more local model volumes needed!
+
     ports:
       - "8000:8000"
     restart: always
 
-  # --- Frontend Service (React + Vite) ---
   frontend:
     build:
-      context: ../frontend  # Changed from ../frontend/CSA-chatbot
+      context: ../frontend  
       dockerfile: ../docker/Dockerfile.frontend
       args:
         - VITE_API_BASE_URL=/api
