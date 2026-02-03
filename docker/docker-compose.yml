@@ -1,30 +1,59 @@
+version: '3.8'
+
 services:
-  # Backend Service (FastAPI + Hugging Face Cloud) 
+  # ---------------------------------------------------------------------------
+  # BACKEND: FastAPI + Hugging Face Inference
+  # ---------------------------------------------------------------------------
   backend:
     build:
       context: ..
-      dockerfile: docker/Dockerfile.backend 
+      dockerfile: docker/Dockerfile.backend
     container_name: csa_chatbot_backend
+    restart: always
     env_file:
-      - ../docker/.env  
+      - ../backend/.env
     environment:
       - HF_TOKEN=${HF_TOKEN}
       - HF_MODEL_ID=${HF_MODEL_ID}
-
     ports:
       - "8000:8000"
-    restart: always
+    # Healthcheck ensures the API is actually responsive before other services use it
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - chatbot_net
+    # Resource limits prevent a single container from crashing your Windows host
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
 
-  # Frontend Service (Vite + React)
+  # ---------------------------------------------------------------------------
+  # FRONTEND: React + Vite (Served via Nginx)
+  # ---------------------------------------------------------------------------
   frontend:
     build:
-      context: ../frontend  
-      dockerfile: ../docker/Dockerfile.frontend
-      args:
-        - VITE_API_BASE_URL=/api
+      context: ..
+      dockerfile: docker/Dockerfile.frontend
     container_name: csa_chatbot_frontend
+    restart: always
     ports:
       - "5173:5173"
+    # OPTIMIZATION: Only start frontend once backend is HEALTHY, not just "started"
     depends_on:
-      - backend
-    restart: always
+      backend:
+        condition: service_healthy
+    networks:
+      - chatbot_net
+
+# ---------------------------------------------------------------------------
+# NETWORKS: Isolated bridge for security and internal DNS
+# ---------------------------------------------------------------------------
+networks:
+  chatbot_net:
+    driver: bridge
