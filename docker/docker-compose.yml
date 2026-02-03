@@ -40,6 +40,9 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile.frontend
+      args:
+      # This pulls the value from your .env or shell and passes it to the Docker build
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL}
     container_name: csa_chatbot_frontend
     restart: always
     ports:
