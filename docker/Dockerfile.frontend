@@ -1,20 +1,18 @@
-FROM node:18-alpine as build
+# Build React app
+FROM node:18-alpine AS build
 WORKDIR /app
 
-ARG VITE_API_BASE_URL
-ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
-
-COPY CSA-chatbot/package.json CSA-chatbot/package-lock.json ./
+COPY frontend/CSA-chatbot/package*.json ./
 RUN npm install
-COPY CSA-chatbot/ . 
+COPY frontend/CSA-chatbot/ .
 RUN npm run build
 
-# Serving with nginx
+# Serve with Nginx
 FROM nginx:1.25-alpine
 COPY --from=build /app/dist /usr/share/nginx/html
-RUN rm /etc/nginx/conf.d/default.conf
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Point to where your nginx.conf is actually located
+COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 5173
 CMD ["nginx", "-g", "daemon off;"]
