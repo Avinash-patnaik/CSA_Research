@@ -11,3 +11,6 @@ pydantic==2.11.7                    # Pydantic v2 for FastAPI compatibility
 huggingface-hub                     # For free Serverless Inference API
 sentence-transformers==2.2.2        # Still useful for local embedding logic if needed
 tiktoken==0.7.0                     # Tokenizer for OpenAI models
+langchain-community
+langchain-huggingface
+pypdf
