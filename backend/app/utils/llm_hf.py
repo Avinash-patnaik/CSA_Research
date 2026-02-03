@@ -14,7 +14,7 @@ class LLMHFEngine:
         
         self.client = InferenceClient(
             model=self.model_id,
-            api_key=self.hf_token      
+            token=self.hf_token      
             )
         print(f"✅ Hugging Face Inference Client initialized for model: {self.model_id}")
         
