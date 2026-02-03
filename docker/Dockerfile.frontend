@@ -1,22 +1,19 @@
-# --- Stage 1: Build ---
 FROM node:18-alpine as build
 WORKDIR /app
 
 ARG VITE_API_BASE_URL
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 
-# Update these paths to include the subfolder
 COPY CSA-chatbot/package.json CSA-chatbot/package-lock.json ./
 RUN npm install
 COPY CSA-chatbot/ . 
 RUN npm run build
 
-# --- Stage 2: Serve ---
+# Serving with nginx
 FROM nginx:1.25-alpine
 COPY --from=build /app/dist /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 
-# This will now work because nginx.conf is in the root of the context (../frontend)
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 5173
