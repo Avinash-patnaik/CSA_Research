@@ -16,7 +16,6 @@ Le tue responsabilità includono:
 3. Se non conosci una risposta, ammettilo gentilmente invece di inventare informazioni.
 """
 
-# Match the frontend body: JSON.stringify({ query: query })
 class ChatRequest(BaseModel):
     query: str
 
@@ -35,10 +34,9 @@ async def chat_endpoint(request: ChatRequest):
                 {"role": "user", "content": request.query}
             ],
             max_tokens=800,
-            temperature=0.4 # Lower temperature for more professional, stable Italian
+            temperature=0.4 
         )
-        
-        # Match the frontend interface: ChatResponse { response: string }
+
         return {"response": response.choices[0].message.content}
 
     except Exception as e:
