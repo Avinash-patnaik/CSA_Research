@@ -14,7 +14,8 @@ services:
     ports:
       - "8000:8000"
     restart: always
-
+    
+  # Frontend Service (Vite + React)
   frontend:
     build:
       context: ../frontend  
