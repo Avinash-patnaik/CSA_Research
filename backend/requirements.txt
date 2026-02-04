@@ -14,7 +14,7 @@ tiktoken==0.7.0                     # Tokenizer for OpenAI models
 langchain-community                 # Community integrations for LangChain
 langchain-huggingface               # Hugging Face integration for LangChain
 pypdf                               # PDF text extraction
-numpy==1.26.4                               # Numerical operations       
+numpy==1.26.4                       # Numerical operations       
 pandas                              # Data manipulation
 openpyxl                            # Excel file handling   
 langchain-text-splitters            # Text splitting utilities
