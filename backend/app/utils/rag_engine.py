@@ -21,8 +21,17 @@ class RAGEngine:
                 query_texts=[user_query],
                 n_results=n_results
             )
-            return "\n\n".join(results.get('documents', [[]])[0])
+            chunks = results.get('documents', [[]])[0]
+            metadatas = results.get('metadatas', [[]])[0]
+            
+            retrieved_data = []
+            for text, meta in zip(chunks, metadatas):
+                source_name = meta.get("source", "Documento Sconosciuto")
+                retrieved_data.append({"text": text, "source": source_name})
+                
+            return retrieved_data
         except Exception as e:
-            return f"Error: {str(e)}"
+            print(f"Errore RAG: {e}")
+            return []
 
 rag_engine = RAGEngine()

@@ -3,22 +3,23 @@ from .utils.rag_engine import rag_engine
 
 def answer_query(user_query: str) -> str:
     
-    context = rag_engine.query_documents(user_query)
-
-
-    prompt = f"""Sei l'assistente virtuale ufficiale di CSA, che sta per 'Centro Statistica Azienda'.
+    retrieved_data = rag_engine.query_documents(user_query)
     
-    REGOLE IMPORTANTI:
-    - Quando ti riferisci a CSA, usa sempre il nome completo: 'Centro Statistica Azienda'.
-    - Rispondi in modo professionale e cordiale in lingua italiana e inglese.
-    - Usa solo le informazioni fornite nei DOCUMENTI qui sotto per rispondere.
-    - Se la risposta non è presente, dì gentilmente che non lo sai.
-
+    context_text = "\n\n".join([f"Fonte: {d['source']}\nContenuto: {d['text']}" for d in retrieved_data])
+    
+    prompt = f"""Sei l'assistente ufficiale del Centro Statistica Azienda (CSA).
+    Rispondi in italiano usando solo i documenti forniti.
+    
     DOCUMENTI:
-    {context}
+    {context_text}
     
     DOMANDA: {user_query}
     
     RISPOSTA:"""
     
-    return get_hf_response(prompt)
+    llm_answer = get_hf_response(prompt)
+    
+    unique_sources = list(set([d['source'] for d in retrieved_data]))
+    sources_list = "\n\n**Fonti consultate:**\n" + "\n".join([f"- {s}" for s in unique_sources])
+    
+    return f"{llm_answer}{sources_list}"
