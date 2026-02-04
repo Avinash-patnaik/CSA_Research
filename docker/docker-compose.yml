@@ -25,7 +25,7 @@ services:
       retries: 3
       start_period: 40s
     volumes:
-      - - ../backend/data/chroma_db:/app/backend/data/chroma_db
+      - "../backend/data/chroma_db:/app/backend/data/chroma_db"
     networks:
       - chatbot_net
     # Resource limits prevent a single container from crashing your Windows host
