@@ -24,10 +24,7 @@ def answer_query(user_query: str) -> str:
     
 
     llm_answer = get_hf_response(prompt)
-
-    if retrieved_data and len(retrieved_data) > 0:
-        unique_sources = list(set([d['source'] for d in retrieved_data]))
-        sources_list = "\n\n**Fonti consultate:**\n" + "\n".join([f"- {s}" for s in unique_sources])
-        return f"{llm_answer}{sources_list}"
+    
+    print(f"✅ RAG Response generated for Italian query")
     
     return llm_answer
