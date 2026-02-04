@@ -15,24 +15,23 @@ class LLMHFEngine:
         self.client = InferenceClient(
             model=self.model_id,
             token=self.hf_token      
-            )
+        )
         print(f"✅ Hugging Face Inference Client initialized for model: {self.model_id}")
         
     def generate_response(self, prompt: str) -> str:
-        
-        system_prompt = "Sei un assistente disponibile, rispettoso e onesto. Rispondi sempre in italiano."
+        system_prompt = "Sei l'assistente ufficiale del Centro Statistica Azienda (CSA). Rispondi sempre in italiano."
         
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": prompt}
         ]
         
-        print(f"🤖 Sending prompt to Hugging Face model: {self.model_id}")
+        print(f"🤖 Calling Hugging Face API: {self.model_id}")
         
         try:
             response = self.client.chat_completion(
                 messages=messages,
-                max_new_tokens=512,
+                max_tokens=512,  
                 temperature=0.7
             )
             
@@ -41,7 +40,7 @@ class LLMHFEngine:
             return response_text
 
         except Exception as e:
-            print(f"❌ Error during Hugging Face inference: {e}")
+            print(f"❌ HF Inference Error: {str(e)}")
             return "Si è verificato un errore durante la generazione della risposta."
         
 llm_hf_engine = LLMHFEngine()
