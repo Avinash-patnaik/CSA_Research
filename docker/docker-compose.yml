@@ -24,6 +24,8 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    volumes:
+      - ../backend/
     networks:
       - chatbot_net
     # Resource limits prevent a single container from crashing your Windows host

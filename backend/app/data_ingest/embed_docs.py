@@ -5,9 +5,9 @@ from chromadb.utils import embedding_functions
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
 
-DOCS_DIR = "backend/data/documents"
-TRANSCRIPTS_DIR = "backend/data/transcripts"
-CHROMA_PATH = "backend/data/chroma_db"
+DOCS_DIR = "data/documents"
+TRANSCRIPTS_DIR = "data/transcripts"
+CHROMA_PATH = "data/chroma_db"
 
 def process_tabular_data(file_path):
     """Converts CSV/Excel rows into text strings for embedding."""
