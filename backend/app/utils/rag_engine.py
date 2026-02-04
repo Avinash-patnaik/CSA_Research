@@ -15,13 +15,14 @@ class RAGEngine:
             embedding_function=self.ef
         )
 
-    def search(self, query: str, top_k: int = 3):
-
-        results = self.collection.query(
-            query_texts=[query],
-            n_results=top_k
-        )
-
-        return "\n\n".join(results['documents'][0])
+    def query_documents(self, user_query: str, n_results: int = 3):
+        try:
+            results = self.collection.query(
+                query_texts=[user_query],
+                n_results=n_results
+            )
+            return "\n\n".join(results.get('documents', [[]])[0])
+        except Exception as e:
+            return f"Error: {str(e)}"
 
 rag_engine = RAGEngine()
