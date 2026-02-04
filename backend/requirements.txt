@@ -6,12 +6,10 @@ pydantic==2.11.7
 
 # --- Database & Storage ---
 mysql-connector-python==8.2.0
-# Specifying numpy<2.0 is critical to fix the np.float_ error in chromadb
 numpy==1.26.4
 chromadb==0.4.24
 
 # --- AI & Embeddings ---
-# Upgrading sentence-transformers to >=2.3.0 fixes the 'cached_download' error
 sentence-transformers>=2.3.0
 huggingface-hub
 langchain-community
