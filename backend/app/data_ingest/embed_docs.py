@@ -24,7 +24,7 @@ def process_tabular_data(file_path):
 
 def run_ingestion():
     huggingface_ef = embedding_functions.SentenceTransformerEmbeddingFunction(
-        model_name="all-MiniLM-L6-v2"
+        model_name="nickprock/sentence-bert-base-italian-uncased"
     )
 
     client = chromadb.PersistentClient(path=CHROMA_PATH)
@@ -33,7 +33,11 @@ def run_ingestion():
         embedding_function=huggingface_ef
     )
 
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+    text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1000,
+    chunk_overlap=150, 
+    separators=["\n\n", "\n", ".", "!", "?", ";", " ", ""] 
+)
 
     for target_dir in [DOCS_DIR, TRANSCRIPTS_DIR]:
         if not os.path.exists(target_dir): continue
