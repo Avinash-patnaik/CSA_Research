@@ -4,27 +4,24 @@ from .utils.rag_engine import rag_engine
 def answer_query(user_query: str) -> str:
 
     retrieved_data = rag_engine.query_documents(user_query)
-
+    
     context_text = "\n\n".join([f"Source: {d['source']}\nContent: {d['text']}" for d in retrieved_data])
     
-    prompt = f"""You are the official virtual assistant for the Centro Statistica Azienda (CSA). 
+    prompt = f"""Tu sei l'assistente del Centro Statistica Azienda (CSA). 
     
-    INSTRUCTIONS:
-    - If the user greets you or engages in general small talk (e.g., "Hi", "How are you?"), respond cordially in Italian as a friendly AI assistant.
-    - If the user asks a specific question, use the provided DOCUMENTS to answer accurately in professional Italian.
-    - If the question is technical/specific but NOT found in the DOCUMENTS, tell the user politely that you don't have that specific information in your records.
-    - Always maintain the identity of Centro Statistica Azienda (CSA).
+    REGOLE DI RISPOSTA:
+    1. NON iniziare la risposta con saluti ripetitivi come "Ciao! Sono felice di assisterti" o "Il CSA è qui per aiutarti".
+    2. Vai direttamente alla risposta o al commento richiesto dall'utente.
+    3. Rispondi in italiano professionale usando i DOCUMENTI se necessario.
+    4. Se l'utente ti saluta per la prima volta, puoi rispondere al saluto brevemente, ma evita presentazioni lunghe.
 
-    DOCUMENTS:
+    DOCUMENTI:
     {context_text}
     
-    USER QUESTION: {user_query}
+    DOMANDA UTENTE: {user_query}
     
-    RESPONSE:"""
+    RISPOSTA:"""
     
-
     llm_answer = get_hf_response(prompt)
-    
-    print(f"✅ RAG Response generated for Italian query")
     
     return llm_answer
