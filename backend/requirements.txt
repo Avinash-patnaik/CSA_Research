@@ -1,16 +1,16 @@
 # --- Core API & Server ---
-fastapi[all]==0.115.2
-uvicorn[standard]==0.29.0
-python-dotenv==1.0.1
-pydantic==2.11.7
+fastapi[all]>=0.115.2
+uvicorn[standard]>=0.29.0
+python-dotenv>=1.0.1
+pydantic>=2.10.0
 
 # --- Database & Storage ---
-mysql-connector-python==8.2.0
-numpy==1.26.4
-chromadb==0.4.24
+mysql-connector-python>=8.2.0
+numpy>=2.1.0
+chromadb>=0.5.0
 
 # --- AI & Embeddings ---
-sentence-transformers>=2.3.0
+sentence-transformers>=3.0.0
 huggingface-hub
 langchain-community
 langchain-huggingface
@@ -18,10 +18,10 @@ langchain-text-splitters
 
 # --- Document Processing ---
 pypdf
-pandas
+pandas>=2.2.0
 openpyxl
 
 # --- Optional Utilities ---
-openai==1.30.1
+openai>=1.30.1
 openai-whisper
-tiktoken==0.7.0
+tiktoken>=0.7.0
